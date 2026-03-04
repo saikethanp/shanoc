@@ -3,15 +3,15 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { motion } from 'motion/react';
-import { GraduationCap, LogOut, Search, Play, Calendar, BookOpen, User } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { GraduationCap, LogOut, Search, User } from 'lucide-react';
 import { isAuthenticated, logout } from '@/lib/auth';
-import { mockClasses } from '@/lib/mockClasses';
 import ClassCard from '@/components/ClassCard';
 
 export default function StudentPortal() {
   const [isReady, setIsReady] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [classes, setClasses] = useState<any[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -22,7 +22,30 @@ export default function StudentPortal() {
         setIsReady(true);
       }
     };
+
     checkAuth();
+
+    fetch(
+      "https://docs.google.com/spreadsheets/d/e/2PACX-1vTzMVwp7tOPuuL3ZjYtY2LvIXdXveGEYMSjj5gUepj-DDK1ChfOK16C1-zMGh1B9tzN5U7fssx1AyNQ/pub?output=csv"
+    )
+      .then((res) => res.text())
+      .then((data) => {
+        const rows = data.split("\n").slice(1);
+
+        const parsed = rows.map((row, index) => {
+          const cols = row.split(",");
+
+          return {
+            id: index + 1,
+            date: cols[0],
+            subject: cols[1],
+            title: cols[2],
+            videoUrl: cols[3],
+          };
+        });
+
+        setClasses(parsed);
+      });
   }, [router]);
 
   const handleLogout = () => {
@@ -30,10 +53,10 @@ export default function StudentPortal() {
     router.push('/login');
   };
 
-  const filteredClasses = mockClasses.filter(
+  const filteredClasses = classes.filter(
     (c) =>
-      c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.subject.toLowerCase().includes(searchQuery.toLowerCase())
+      c.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      c.subject?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (!isReady) return null;
@@ -56,9 +79,9 @@ export default function StudentPortal() {
             <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full text-sm font-bold text-foreground/70">
               <User size={16} className="text-primary" /> student@example.com
             </div>
+
             <button
               onClick={handleLogout}
-              suppressHydrationWarning
               className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 rounded-full transition-colors"
             >
               <LogOut size={18} /> Logout
@@ -70,15 +93,21 @@ export default function StudentPortal() {
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl font-heading font-bold text-foreground mb-2">Recorded Classes</h1>
-            <p className="text-foreground/60 font-semibold">Welcome back! Catch up on your missed sessions.</p>
+            <h1 className="text-4xl font-heading font-bold text-foreground mb-2">
+              Recorded Classes
+            </h1>
+            <p className="text-foreground/60 font-semibold">
+              Welcome back! Catch up on your missed sessions.
+            </p>
           </div>
 
           <div className="relative w-full md:w-96">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+            <Search
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40"
+              size={20}
+            />
             <input
               type="text"
-              suppressHydrationWarning
               placeholder="Search by title or subject..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -105,8 +134,12 @@ export default function StudentPortal() {
             <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-foreground/20">
               <Search size={40} />
             </div>
-            <h3 className="text-xl font-bold text-foreground mb-2">No classes found</h3>
-            <p className="text-foreground/50">Try searching with a different keyword.</p>
+            <h3 className="text-xl font-bold text-foreground mb-2">
+              No classes found
+            </h3>
+            <p className="text-foreground/50">
+              Try searching with a different keyword.
+            </p>
           </div>
         )}
       </main>
