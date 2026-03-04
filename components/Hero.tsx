@@ -61,7 +61,7 @@ export default function Hero() {
         >
           <div className="relative z-10 rounded-[2rem] overflow-hidden shadow-2xl border-8 border-white">
             <Image
-              src="https://picsum.photos/seed/education/800/800"
+              src="teacher.png"
               alt="Kids learning online"
               width={800}
               height={800}
