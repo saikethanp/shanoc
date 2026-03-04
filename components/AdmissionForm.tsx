@@ -17,7 +17,7 @@ export default function AdmissionForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const message = `*New Admission Inquiry*%0A%0A*Student Name:* ${formData.studentName}%0A*Parent Name:* ${formData.parentName}%0A*Class:* ${formData.class}%0A*Phone:* ${formData.phone}%0A*Course:* ${formData.course}%0A*Message:* ${formData.message}`;
-    window.open(`https://wa.me/910000000000?text=${message}`, '_blank');
+    window.open(`https://wa.me/9963980472?text=${message}`, '_blank');
   };
 
   return (

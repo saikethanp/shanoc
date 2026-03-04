@@ -33,9 +33,9 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-6">Contact Us</h4>
             <ul className="space-y-4 text-foreground/60">
-              <li>Email: info@shanmukha.com</li>
-              <li>Phone: +91 00000 00000</li>
-              <li>Hours: Mon-Sat, 9AM - 7PM</li>
+              <li>Email: shanmukhaoc@gmail.com</li>
+              <li>Phone: +91 9963980472</li>
+              <li>Hours: Mon-Sat, 9AM - 7PM</li>S
             </ul>
           </div>
         </div>

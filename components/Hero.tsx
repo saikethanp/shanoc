@@ -45,7 +45,7 @@ export default function Hero() {
               Enroll Now <ArrowRight size={20} />
             </a>
             <a
-              href="tel:+910000000000"
+              href="tel:+919963980472"
               className="bg-white text-foreground px-8 py-4 rounded-2xl font-bold shadow-lg hover:bg-gray-50 transition-all flex items-center gap-2 border border-gray-100"
             >
               <Phone size={20} className="text-primary" /> Call Now
