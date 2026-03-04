@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GraduationCap, LogOut, Search, User } from 'lucide-react';
-import { isAuthenticated, logout } from '@/lib/auth';
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import ClassCard from '@/components/ClassCard';
 
 export default function StudentPortal() {
@@ -15,15 +16,14 @@ export default function StudentPortal() {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = () => {
-      if (!isAuthenticated()) {
-        router.push('/login');
-      } else {
-        setIsReady(true);
-      }
-    };
 
-    checkAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsReady(true);
+      } else {
+        router.push("/login");
+      }
+    });
 
     fetch(
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vTzMVwp7tOPuuL3ZjYtY2LvIXdXveGEYMSjj5gUepj-DDK1ChfOK16C1-zMGh1B9tzN5U7fssx1AyNQ/pub?output=csv"
@@ -46,10 +46,13 @@ export default function StudentPortal() {
 
         setClasses(parsed);
       });
+
+    return () => unsubscribe();
+
   }, [router]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut(auth);
     router.push('/login');
   };
 
@@ -63,9 +66,10 @@ export default function StudentPortal() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Portal Header */}
+
       <header className="bg-white border-b border-gray-100 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
+
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-primary p-2 rounded-xl text-white">
               <GraduationCap size={24} />
@@ -76,8 +80,9 @@ export default function StudentPortal() {
           </Link>
 
           <div className="flex items-center gap-4">
+
             <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full text-sm font-bold text-foreground/70">
-              <User size={16} className="text-primary" /> student@example.com
+              <User size={16} className="text-primary" /> Parent
             </div>
 
             <button
@@ -86,12 +91,15 @@ export default function StudentPortal() {
             >
               <LogOut size={18} /> Logout
             </button>
+
           </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-12">
+
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+
           <div>
             <h1 className="text-4xl font-heading font-bold text-foreground mb-2">
               Recorded Classes
@@ -102,10 +110,8 @@ export default function StudentPortal() {
           </div>
 
           <div className="relative w-full md:w-96">
-            <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40"
-              size={20}
-            />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/40" size={20} />
+
             <input
               type="text"
               placeholder="Search by title or subject..."
@@ -114,9 +120,11 @@ export default function StudentPortal() {
               className="w-full pl-12 pr-4 py-4 rounded-2xl border border-gray-100 bg-white shadow-sm focus:border-primary outline-none transition-all"
             />
           </div>
+
         </div>
 
         {filteredClasses.length > 0 ? (
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredClasses.map((session, i) => (
               <motion.div
@@ -129,20 +137,27 @@ export default function StudentPortal() {
               </motion.div>
             ))}
           </div>
+
         ) : (
+
           <div className="text-center py-20 bg-white rounded-[3rem] border border-dashed border-gray-200">
             <div className="bg-gray-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-foreground/20">
               <Search size={40} />
             </div>
+
             <h3 className="text-xl font-bold text-foreground mb-2">
               No classes found
             </h3>
+
             <p className="text-foreground/50">
               Try searching with a different keyword.
             </p>
           </div>
+
         )}
+
       </main>
+
     </div>
   );
 }
