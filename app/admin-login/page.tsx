@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function AdminLogin(){
 
@@ -26,9 +27,20 @@ return(
 
 <div className="min-h-screen flex items-center justify-center bg-gray-100">
 
-<div className="bg-white p-10 rounded-3xl shadow-xl w-[400px]">
+<div className="bg-white p-10 rounded-3xl shadow-xl w-[420px]">
 
-<h1 className="text-2xl font-bold mb-6">Admin Login</h1>
+<div className="flex justify-between items-center mb-6">
+
+<h1 className="text-2xl font-bold">Admin Login</h1>
+
+<Link
+href="/"
+className="text-sm bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
+>
+← Home
+</Link>
+
+</div>
 
 <form onSubmit={handleLogin} className="space-y-4">
 
