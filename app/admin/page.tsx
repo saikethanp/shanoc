@@ -66,6 +66,7 @@ export default function AdminPage() {
       {
         method:"POST",
         body:JSON.stringify({
+          action:"add",
           date,
           subject,
           title,
@@ -87,15 +88,26 @@ export default function AdminPage() {
 
   }
 
-  const deleteClass=(id:number)=>{
+  const deleteClass = async(title:string)=>{
 
     const confirmDelete = confirm("Delete this class?")
 
     if(!confirmDelete) return
 
-    const updated = classes.filter(c=>c.id!==id)
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbysXhSAKthBK1324tVMkUVN1heG9YVrJYNfI8BHf9un3uuu3NkOtfM1lQk8PVn2wnCT/exec",
+      {
+        method:"POST",
+        body:JSON.stringify({
+          action:"delete",
+          title:title
+        })
+      }
+    )
 
-    setClasses(updated)
+    alert("Class Deleted")
+
+    loadClasses()
 
   }
 
@@ -176,6 +188,7 @@ className="w-full bg-primary text-white py-3 rounded-lg font-bold"
 <div className="space-y-4 max-h-[400px] overflow-y-auto">
 
 {classes.map((c)=>(
+
 <div
 key={c.id}
 className="border p-4 rounded-lg flex justify-between items-center"
@@ -187,13 +200,14 @@ className="border p-4 rounded-lg flex justify-between items-center"
 </div>
 
 <button
-onClick={()=>deleteClass(c.id)}
+onClick={()=>deleteClass(c.title)}
 className="text-red-500 font-bold"
 >
 Delete
 </button>
 
 </div>
+
 ))}
 
 </div>
