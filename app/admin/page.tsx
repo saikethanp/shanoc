@@ -1,18 +1,32 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AdminPage() {
 
-  const [date, setDate] = useState("");
-  const [subject, setSubject] = useState("");
-  const [title, setTitle] = useState("");
-  const [video, setVideo] = useState("");
+  const router = useRouter()
+
+  const [date, setDate] = useState("")
+  const [subject, setSubject] = useState("")
+  const [title, setTitle] = useState("")
+  const [video, setVideo] = useState("")
+
+  useEffect(()=>{
+
+    const admin = localStorage.getItem("admin")
+
+    if(admin !== "true"){
+      router.push("/admin-login")
+    }
+
+  },[])
 
   const handleSubmit = async (e:any) => {
-    e.preventDefault();
 
-    const response = await fetch(
+    e.preventDefault()
+
+    await fetch(
       "https://script.google.com/macros/s/AKfycbysXhSAKthBK1324tVMkUVN1heG9YVrJYNfI8BHf9un3uuu3NkOtfM1lQk8PVn2wnCT/exec",
       {
         method: "POST",
@@ -23,17 +37,18 @@ export default function AdminPage() {
           video
         })
       }
-    );
+    )
 
-    alert("Class Added Successfully");
+    alert("Class Added Successfully")
 
-    setDate("");
-    setSubject("");
-    setTitle("");
-    setVideo("");
-  };
+    setDate("")
+    setSubject("")
+    setTitle("")
+    setVideo("")
+  }
 
   return (
+
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
 
       <div className="bg-white p-10 rounded-3xl shadow-xl w-[400px]">
@@ -85,5 +100,7 @@ export default function AdminPage() {
       </div>
 
     </div>
-  );
+
+  )
+
 }

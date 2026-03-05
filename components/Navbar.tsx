@@ -55,19 +55,30 @@ export default function Navbar() {
               </Link>
             ))}
           </div>
+
           <div className="flex items-center gap-3">
+
+            <Link
+              href="/admin-login"
+              className="bg-gray-200 text-foreground px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-300 transition-all"
+            >
+              Admin
+            </Link>
+
             <Link
               href="/student-portal"
               className="bg-secondary text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-secondary/20 hover:scale-105 active:scale-95 transition-all"
             >
               Student Portal
             </Link>
+
             <Link
               href="#enroll"
               className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all"
             >
               Enroll Now
             </Link>
+
           </div>
         </div>
 
@@ -100,7 +111,17 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
+
             <div className="flex flex-col gap-3 mt-2">
+
+              <Link
+                href="/admin-login"
+                onClick={() => setIsOpen(false)}
+                className="bg-gray-200 text-center px-6 py-3 rounded-xl font-bold"
+              >
+                Admin
+              </Link>
+
               <Link
                 href="/student-portal"
                 onClick={() => setIsOpen(false)}
@@ -108,6 +129,7 @@ export default function Navbar() {
               >
                 Student Portal
               </Link>
+
               <Link
                 href="#enroll"
                 onClick={() => setIsOpen(false)}
@@ -115,6 +137,7 @@ export default function Navbar() {
               >
                 Enroll Now
               </Link>
+
             </div>
           </motion.div>
         )}
