@@ -6,40 +6,40 @@ import Link from "next/link";
 
 export default function AdminPage() {
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const [date,setDate]=useState("")
-  const [subject,setSubject]=useState("")
-  const [title,setTitle]=useState("")
-  const [video,setVideo]=useState("")
-  const [loading,setLoading]=useState(false)
-  const [classes,setClasses]=useState<any[]>([])
+  const [date,setDate]=useState("");
+  const [subject,setSubject]=useState("");
+  const [title,setTitle]=useState("");
+  const [video,setVideo]=useState("");
+  const [loading,setLoading]=useState(false);
+  const [classes,setClasses]=useState<any[]>([]);
 
   useEffect(()=>{
 
-    const admin = localStorage.getItem("admin")
+    const admin = localStorage.getItem("admin");
 
     if(admin!=="true"){
-      router.push("/admin-login")
+      router.push("/admin-login");
     }
 
-    loadClasses()
+    loadClasses();
 
-  },[])
+  },[]);
 
   const loadClasses = async()=>{
 
     const res = await fetch(
       "https://docs.google.com/spreadsheets/d/e/2PACX-1vTzMVwp7tOPuuL3ZjYtY2LvIXdXveGEYMSjj5gUepj-DDK1ChfOK16C1-zMGh1B9tzN5U7fssx1AyNQ/pub?output=csv"
-    )
+    );
 
-    const data = await res.text()
+    const data = await res.text();
 
-    const rows = data.split("\n").slice(1)
+    const rows = data.split("\n").slice(1);
 
     const parsed = rows.map((row,index)=>{
 
-      const cols = row.split(",")
+      const cols = row.split(",");
 
       return{
         id:index,
@@ -47,19 +47,19 @@ export default function AdminPage() {
         subject:cols[1],
         title:cols[2],
         video:cols[3]
-      }
+      };
 
-    })
+    });
 
-    setClasses(parsed)
+    setClasses(parsed);
 
-  }
+  };
 
   const handleSubmit = async(e:any)=>{
 
-    e.preventDefault()
+    e.preventDefault();
 
-    setLoading(true)
+    setLoading(true);
 
     await fetch(
       "https://script.google.com/macros/s/AKfycbysXhSAKthBK1324tVMkUVN1heG9YVrJYNfI8BHf9un3uuu3NkOtfM1lQk8PVn2wnCT/exec",
@@ -73,26 +73,26 @@ export default function AdminPage() {
           video
         })
       }
-    )
+    );
 
-    setLoading(false)
+    setLoading(false);
 
-    alert("✅ Class Added Successfully")
+    alert("✅ Class Added Successfully");
 
-    setDate("")
-    setSubject("")
-    setTitle("")
-    setVideo("")
+    setDate("");
+    setSubject("");
+    setTitle("");
+    setVideo("");
 
-    loadClasses()
+    loadClasses();
 
-  }
+  };
 
   const deleteClass = async(title:string)=>{
 
-    const confirmDelete = confirm("Delete this class?")
+    const confirmDelete = confirm("Delete this class?");
 
-    if(!confirmDelete) return
+    if(!confirmDelete) return;
 
     await fetch(
       "https://script.google.com/macros/s/AKfycbysXhSAKthBK1324tVMkUVN1heG9YVrJYNfI8BHf9un3uuu3NkOtfM1lQk8PVn2wnCT/exec",
@@ -103,13 +103,13 @@ export default function AdminPage() {
           title:title
         })
       }
-    )
+    );
 
-    alert("Class Deleted")
+    alert("🗑 Class Deleted");
 
-    loadClasses()
+    loadClasses();
 
-  }
+  };
 
   return(
 
@@ -172,7 +172,7 @@ className="w-full p-3 border rounded-lg"
 
 <button
 disabled={loading}
-className="w-full bg-primary text-white py-3 rounded-lg font-bold"
+className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold"
 >
 {loading ? "Adding Class..." : "Publish Class"}
 </button>
@@ -220,6 +220,6 @@ Delete
 
 </div>
 
-  )
+  );
 
 }
